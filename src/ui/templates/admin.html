@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aroma AI - Admin Dashboard</title>
+    <style>
+        :root {
+            /* Existing variables should be here */
+            --primary-color: #5e9eff; /* Example, adjust if needed */
+            --text-light: #e0e0e0;
+            --dark-bg-card: #1a2942;
+            --border-medium: #2d4063;
+
+            /* Status message variables - assuming these are already here or similar */
+            --status-info-bg: rgba(94, 158, 255, 0.1);
+            --status-info-text: #5e9eff;
+            --status-info-border: #2d4063;
+            --success-bg: #1c3d23;
+            --success-text: #2ea043;
+            --success-border: #25502d;
+            --danger-bg-general: #4d1a1f; /* General danger, e.g., for status messages */
+            --danger-text-general: #f85149;
+            --danger-border-general: #8b322c;
+
+            /* Specific for danger button styling */
+            --danger-btn-bg: #6b2328; /* Slightly different for button */
+            --danger-btn-text: #f85149; /* Can be same as general text */
+            --danger-btn-border: #8b322c; /* Can be same as general border */
+            --danger-btn-hover-bg: #8b322c; /* Darker hover for button */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0f1a2b;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        
+        .tech-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: linear-gradient(rgba(24, 35, 55, 0.8) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(24, 35, 55, 0.8) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: -1;
+            opacity: 0.2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #2d4063;
+            margin-bottom: 30px;
+        }
+        
+        header h1 {
+            margin: 0;
+            color: #5e9eff;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+        }
+        
+        header h1::before {
+            content: '⚡';
+            margin-right: 10px;
+        }
+        
+        .admin-badge {
+            background-color: rgba(94, 158, 255, 0.2);
+            color: #5e9eff;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            color: #8ba3c2;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: #5e9eff;
+            background-color: rgba(94, 158, 255, 0.1);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .dashboard-card {
+            background-color: #1a2942;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid #2d4063;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dashboard-card h2 {
+            color: #5e9eff;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .dashboard-card h2::before {
+            content: '>';
+            margin-right: 10px;
+            color: #5e9eff;
+            font-family: monospace;
+        }
+        
+        .dashboard-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, transparent 49%, rgba(94, 158, 255, 0.1) 50%, transparent 51%);
+            z-index: 1;
+        }
+        
+        /* File upload section */
+        .file-upload {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .file-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #2d4063;
+            color: #8ba3c2;
+            padding: 15px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px dashed #5e9eff;
+        }
+        
+        .file-label:hover {
+            background-color: #364c6e;
+            color: #e0e0e0;
+        }
+        
+        .file-label i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .uploaded-files {
+            background-color: #152238;
+            border-radius: 4px;
+            padding: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .uploaded-file {
+            background-color: #1e314d;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .file-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .remove-file {
+            background: none;
+            border: none;
+            color: #ff5e5e;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .process-btn {
+            background-color: #5e9eff;
+            color: #0f1a2b;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 16px;
+            width: 100%;
+        }
+        
+        .process-btn:hover {
+            background-color: #4b8bff;
+        }
+        
+        /* Model selection section */
+        .model-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .model-option {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background-color: #152238;
+            border-radius: 4px;
+            padding: 15px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .model-option:hover {
+            border-color: #2d4063;
+        }
+        
+        .model-option input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .checkmark {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #2d4063;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        .model-option input:checked ~ .checkmark {
+            border-color: #5e9eff;
+        }
+        
+        .model-option input:checked ~ .checkmark::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #5e9eff;
+        }
+        
+        .model-info {
+            flex-grow: 1;
+        }
+        
+        .model-name {
+            color: #a1b5d3;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .model-desc {
+            color: #8ba3c2;
+            font-size: 14px;
+        }
+        
+        .update-model-btn {
+            background-color: #5e9eff;
+            color: #0f1a2b;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 16px;
+            width: 100%;
+        }
+        
+        .update-model-btn:hover {
+            background-color: #4b8bff;
+        }
+        
+        .tech-pulse {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 10px;
+            height: 10px;
+            background-color: #5e9eff;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.5;
+                box-shadow: 0 0 0 0 rgba(94, 158, 255, 0.7);
+            }
+            70% {
+                transform: scale(1);
+                opacity: 1;
+                box-shadow: 0 0 0 10px rgba(94, 158, 255, 0);
+            }
+            100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+                box-shadow: 0 0 0 0 rgba(94, 158, 255, 0);
+            }
+        }
+        
+        .status-message {
+            display: none;
+            padding: 12px;
+            background-color: #152238;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        
+        .status-success {
+            border-left: 3px solid #52e3a0;
+        }
+        
+        .status-error {
+            border-left: 3px solid #ff5e5e;
+        }
+        
+        .status-processing {
+            border-left: 3px solid #5e9eff;
+        }
+        .admin-badge {
+            background-color: rgba(94, 158, 255, 0.2); /* Original admin-badge style */
+            color: #5e9eff; /* Original admin-badge style */
+            padding: 3px 8px; /* Original admin-badge style */
+            border-radius: 3px; /* Original admin-badge style */
+            font-size: 12px; /* Original admin-badge style */
+            margin-left: 10px; /* Original admin-badge style */
+        }
+
+        .action-btn {
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .danger-btn {
+            background-color: var(--danger-btn-bg);
+            color: var(--danger-btn-text);
+            border: 1px solid var(--danger-btn-border);
+        }
+
+        .danger-btn:hover {
+            background-color: var(--danger-btn-hover-bg);
+            /* color: var(--danger-btn-text); /* Text color usually doesn't change on hover for this style */
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="tech-grid"></div>
+    <div class="tech-pulse"></div>
+    
+    <div class="container">
+        <header>
+            <h1>AROMA AI <span class="admin-badge">ADMIN PANEL</span></h1>
+            <div class="nav-links">
+                <a href="/">Main Interface</a>
+                <a href="/admin/logout">Logout</a>
+            </div>
+        </header>
+        
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <h2>Knowledge Base Management</h2>
+                <div class="file-upload">
+                    <input type="file" id="file-upload" class="file-input" multiple>
+                    <label for="file-upload" class="file-label">
+                        <i>📄</i> Select documents to upload
+                    </label>
+                    
+                    <div class="uploaded-files" id="uploaded-files-list"></div>
+                    
+                    <button id="process-files" class="process-btn">Process Files</button>
+                    
+                    <div id="upload-status" class="status-message"></div>
+                </div>
+            </div>
+
+            <div class="dashboard-card system-actions-card">
+                <h2><span class="icon">⚙️</span>System Actions</h2>
+                <p>Manage the underlying knowledge base and system settings.</p>
+                <button id="clearKnowledgeBaseBtn" class="action-btn danger-btn">Clear Knowledge Base & Retrain</button>
+                <div id="clearKbStatus" class="status-message"></div>
+            </div>
+            
+            <div class="dashboard-card">
+                <h2>Model Configuration</h2>
+                <div class="model-selection">
+                    <label class="model-option">
+                        <input type="radio" name="model" value="tinyllama" checked>
+                        <span class="checkmark"></span>
+                        <div class="model-info">
+                            <div class="model-name">TinyLlama</div>
+                            <div class="model-desc">Lightweight model, good for quick responses</div>
+                        </div>
+                    </label>
+                    
+                    <label class="model-option">
+                        <input type="radio" name="model" value="llama2">
+                        <span class="checkmark"></span>
+                        <div class="model-info">
+                            <div class="model-name">Llama2</div>
+                            <div class="model-desc">Balanced performance and quality</div>
+                        </div>
+                    </label>
+                    
+                    <label class="model-option">
+                        <input type="radio" name="model" value="mistral">
+                        <span class="checkmark"></span>
+                        <div class="model-info">
+                            <div class="model-name">Mistral</div>
+                            <div class="model-desc">High-quality text generation</div>
+                        </div>
+                    </label>
+                    
+                    <label class="model-option">
+                        <input type="radio" name="model" value="stablelm2">
+                        <span class="checkmark"></span>
+                        <div class="model-info">
+                            <div class="model-name">StableLM2</div>
+                            <div class="model-desc">Stable performance across tasks</div>
+                        </div>
+                    </label>
+                    
+                    <label class="model-option">
+                        <input type="radio" name="model" value="deepseek-r1:1.5b">
+                        <span class="checkmark"></span>
+                        <div class="model-info">
+                            <div class="model-name">DeepSeek-r1 1.5B</div>
+                            <div class="model-desc">Compact but powerful</div>
+                        </div>
+                    </label>
+                    
+                    <button id="update-model" class="update-model-btn">Update Model</button>
+                    
+                    <div id="model-status" class="status-message"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileUpload = document.getElementById('file-upload');
+            const uploadedFilesList = document.getElementById('uploaded-files-list');
+            const processFilesButton = document.getElementById('process-files');
+            const uploadStatus = document.getElementById('upload-status');
+            const updateModelButton = document.getElementById('update-model');
+            const modelStatus = document.getElementById('model-status');
+            
+            // Store uploaded files
+            const uploadedFiles = new Set();
+            
+            // Handle file upload
+            fileUpload.addEventListener('change', function(e) {
+                const files = e.target.files;
+                
+                for (let i = 0; i < files.length; i++) {
+                    uploadedFiles.add(files[i]);
+                }
+                
+                refreshFilesList();
+            });
+            
+            // Function to refresh the files list UI
+            function refreshFilesList() {
+                uploadedFilesList.innerHTML = '';
+                
+                if (uploadedFiles.size === 0) {
+                    uploadedFilesList.innerHTML = '<div style="color: #8ba3c2; text-align: center; padding: 15px;">No files selected</div>';
+                    return;
+                }
+                
+                uploadedFiles.forEach(file => {
+                    const fileElement = document.createElement('div');
+                    fileElement.className = 'uploaded-file';
+                    
+                    const fileName = document.createElement('div');
+                    fileName.className = 'file-name';
+                    fileName.textContent = file.name;
+                    
+                    const removeButton = document.createElement('button');
+                    removeButton.className = 'remove-file';
+                    removeButton.innerHTML = '&times;';
+                    removeButton.addEventListener('click', function() {
+                        uploadedFiles.delete(file);
+                        refreshFilesList();
+                    });
+                    
+                    fileElement.appendChild(fileName);
+                    fileElement.appendChild(removeButton);
+                    uploadedFilesList.appendChild(fileElement);
+                });
+            }
+            
+            // Initialize empty file list
+            refreshFilesList();
+
+            // Clear Knowledge Base
+            const clearKbBtn = document.getElementById('clearKnowledgeBaseBtn');
+            const clearKbStatusEl = document.getElementById('clearKbStatus');
+
+            if (clearKbBtn) {
+                clearKbBtn.addEventListener('click', function() {
+                    if (confirm('Are you sure you want to delete all data from the knowledge base? This action cannot be undone. You will need to re-upload all files.')) {
+                        showStatus(clearKbStatusEl, 'Clearing knowledge base...', 'info');
+                        fetch('/admin/clear_knowledge_base', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                // Add CSRF token if your app uses them for POST requests
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                showStatus(clearKbStatusEl, data.message, 'success');
+                                // Clear the displayed list of uploaded files as they are no longer in the DB
+                                uploadedFiles.clear();
+                                refreshFilesList(); 
+                                // Optionally, clear the file input field as well
+                                document.getElementById('fileInput').value = '';
+                            } else {
+                                showStatus(clearKbStatusEl, `Error: ${data.error || 'Unknown error'}`, 'error');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error clearing knowledge base:', error);
+                            showStatus(clearKbStatusEl, 'An unexpected error occurred. Check console.', 'error');
+                        });
+                    }
+                });
+            }
+            
+            // Process uploaded files
+            processFilesButton.addEventListener('click', function() {
+                if (uploadedFiles.size === 0) {
+                    showStatus(uploadStatus, 'No files to process. Please upload files first.', 'error');
+                    return;
+                }
+                
+                showStatus(uploadStatus, 'Processing files... This may take a moment.', 'processing');
+                
+                // Create a FormData object
+                const formData = new FormData();
+                uploadedFiles.forEach(file => {
+                    formData.append('files[]', file);
+                });
+                
+                // Send files to the backend
+                fetch('/api/upload_files', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showStatus(uploadStatus, `Files processed successfully! ${data.file_count} files added to knowledge base.`, 'success');
+                        // Clear the file list
+                        uploadedFiles.clear();
+                        refreshFilesList();
+                    } else {
+                        showStatus(uploadStatus, `Error processing files: ${data.error}`, 'error');
+                    }
+                })
+                .catch(error => {
+                    showStatus(uploadStatus, `Error communicating with server: ${error}`, 'error');
+                });
+            });
+            
+            // Update model
+            updateModelButton.addEventListener('click', function() {
+                const selectedModel = document.querySelector('input[name="model"]:checked').value;
+                
+                showStatus(modelStatus, `Updating model to ${selectedModel}...`, 'processing');
+                
+                // Send to backend
+                fetch('/api/update_model', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ model: selectedModel })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showStatus(modelStatus, `Model updated successfully to ${data.model}`, 'success');
+                    } else {
+                        showStatus(modelStatus, `Error updating model: ${data.error}`, 'error');
+                    }
+                })
+                .catch(error => {
+                    showStatus(modelStatus, `Error communicating with server: ${error}`, 'error');
+                });
+            });
+            
+            // Function to show status message
+            function showStatus(element, message, type) {
+                element.textContent = message;
+                element.className = `status-message status-${type}`;
+                element.style.display = 'block';
+                
+                if (type !== 'processing') {
+                    setTimeout(() => {
+                        element.style.opacity = '0';
+                        setTimeout(() => {
+                            element.style.display = 'none';
+                            element.style.opacity = '1';
+                        }, 500);
+                    }, 5000);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

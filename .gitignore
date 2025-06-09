@@ -1,0 +1,6 @@
+/.venv
+/.vscode
+.env
+/dataraw
+/docs
+/z backup data

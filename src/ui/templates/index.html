@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aroma AI | Intelligence Interface</title>
+    <link rel="icon" type="image/png" href="https://www.aromaschool.edu.np/wp-content/uploads/2020/09/aroma_logo_final.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-dark.css">
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script>
+    <style>
+        :root {
+            --primary: #0066cc;
+            --primary-glow: #0099ff;
+            --secondary: #001a33;
+            --dark-bg: #0d1117;
+            --dark-panel: #161b22;
+            --accent: #58a6ff;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --border-color: #30363d;
+            --success: #2ea043;
+            --danger: #f85149;
+            --warning: #d29922;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .tech-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: linear-gradient(rgba(24, 35, 55, 0.3) 1px, transparent 1px),
+                          linear-gradient(90deg, rgba(24, 35, 55, 0.3) 1px, transparent 1px);
+            z-index: -1;
+        }
+
+        .tech-line {
+            position: fixed;
+            width: 100%;
+            height: 1px;
+            background-color: var(--accent);
+            opacity: 0.2;
+            transform-origin: left;
+            z-index: -1;
+        }
+
+        .tech-line:nth-of-type(1) {
+            top: 15%;
+            animation: pulse 4s infinite alternate;
+        }
+
+        .tech-line:nth-of-type(2) {
+            top: 45%;
+            animation: pulse 5s infinite alternate-reverse;
+        }
+
+        .tech-line:nth-of-type(3) {
+            top: 75%;
+            animation: pulse 6s infinite alternate;
+        }
+
+        .corner-decoration {
+            position: fixed;
+            width: 100px;
+            height: 100px;
+            border: 1px solid var(--accent);
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .corner-decoration:nth-of-type(4) {
+            top: 20px;
+            left: 20px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .corner-decoration:nth-of-type(5) {
+            top: 20px;
+            right: 20px;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .corner-decoration:nth-of-type(6) {
+            bottom: 20px;
+            left: 20px;
+            border-right: none;
+            border-top: none;
+        }
+
+        .corner-decoration:nth-of-type(7) {
+            bottom: 20px;
+            right: 20px;
+            border-left: none;
+            border-top: none;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.1; }
+            100% { opacity: 0.3; }
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+            box-sizing: border-box;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            margin-bottom: 10px;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo::before {
+            content: '';
+            width: 15px;
+            height: 15px;
+            border: 2px solid var(--accent-blue);
+            border-radius: 50%;
+            margin-right: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            width: 5px;
+            height: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background-color: var(--accent-blue);
+            transition: all 0.3s;
+            opacity: 0;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-blue);
+            background-color: rgba(94, 158, 255, 0.05);
+        }
+
+        .nav-links a:hover::before {
+            opacity: 1;
+        }
+
+        /* Status bar */
+        .status-bar {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #52e3a0;
+            margin-right: 10px;
+        }
+
+        .status-indicator.offline {
+            background-color: #ff5e5e;
+        }
+
+        .model-selector {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tech-select {
+            background-color: rgba(13, 17, 23, 0.6);
+            color: var(--accent-blue);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 12px;
+            appearance: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .tech-select:hover, .tech-select:focus {
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 5px rgba(0, 153, 255, 0.3);
+            outline: none;
+        }
+        
+        .tech-select option {
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+        }
+
+        .status-label {
+            background-color: rgba(94, 158, 255, 0.1);
+            color: var(--accent-blue);
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-left: 10px;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Main chat container */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: var(--dark-panel);
+            position: relative;
+            height: calc(100vh - 110px); /* Adjust for header and status bar */
+        }
+
+        /* Messages area */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            scroll-behavior: smooth;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: var(--dark-bg);
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background-color: var(--border-color);
+            border-radius: 4px;
+        }
+
+        /* Message styling */
+        .message {
+            display: flex;
+            margin-bottom: 15px;
+            position: relative;
+            max-width: 85%;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            align-self: flex-end;
+        }
+        
+        .bot-message {
+            align-self: flex-start;
+        }
+        
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .user-avatar {
+            background: linear-gradient(135deg, var(--primary), var(--primary-glow));
+            color: white;
+            order: 2;
+            margin-left: 12px;
+        }
+        
+        .bot-avatar {
+            background-color: var(--dark-panel);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            margin-right: 12px;
+        }
+
+        .message-content {
+            position: relative;
+            max-width: 80%;
+            padding: 15px;
+            border-radius: 6px;
+            line-height: 1.6;
+        }
+
+        .user-message .message-content {
+            background-color: var(--user-message-bg);
+            border: 1px solid rgba(94, 158, 255, 0.2);
+        }
+
+        .bot-message .message-content {
+            background-color: var(--bot-message-bg);
+            border: 1px solid var(--border-color);
+        }
+        
+        /* Markdown styling */
+        .markdown-content p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .markdown-content h1, .markdown-content h2, .markdown-content h3, 
+        .markdown-content h4, .markdown-content h5, .markdown-content h6 {
+            margin-top: 16px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            line-height: 1.25;
+        }
+        
+        .markdown-content h1 { font-size: 1.5em; }
+        .markdown-content h2 { font-size: 1.3em; }
+        .markdown-content h3 { font-size: 1.2em; }
+        
+        .markdown-content ul, .markdown-content ol {
+            margin-top: 8px;
+            margin-bottom: 8px;
+            padding-left: 20px;
+        }
+        
+        .markdown-content ul li, .markdown-content ol li {
+            margin-bottom: 5px;
+        }
+        
+        .markdown-content pre {
+            background-color: rgba(13, 17, 23, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            overflow-x: auto;
+            font-family: monospace;
+        }
+        
+        .markdown-content code {
+            font-family: monospace;
+            background-color: rgba(13, 17, 23, 0.6);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        .markdown-content pre code {
+            background-color: transparent;
+            padding: 0;
+            border-radius: 0;
+            font-size: 0.9em;
+        }
+        
+        .markdown-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 15px 0;
+            overflow-x: auto;
+            display: block;
+        }
+        
+        .markdown-content table th {
+            background-color: rgba(13, 17, 23, 0.8);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .markdown-content table td {
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            background-color: rgba(22, 27, 34, 0.5);
+        }
+        
+        .markdown-content a {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+        
+        .markdown-content a:hover {
+            text-decoration: underline;
+        }
+        
+        .markdown-content blockquote {
+            border-left: 3px solid var(--accent-blue);
+            margin: 10px 0;
+            padding: 0 15px;
+            color: var(--text-secondary);
+        }
+        
+        /* Streaming cursor animation */
+        .streaming-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background-color: var(--accent-blue);
+            animation: blink 1s step-end infinite;
+            margin-left: 2px;
+            vertical-align: middle;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .message-content::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            width: 10px;
+            height: 10px;
+            transform: rotate(45deg);
+        }
+
+        .bot-message .message-content::before {
+            left: -5px;
+            background-color: var(--bot-message-bg);
+            border-left: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 8px;
+            display: block;
+        }
+
+        /* Input area */
+        .chat-input-container {
+            border-top: 1px solid var(--border-color);
+            padding: 15px 20px;
+            position: relative;
+            background-color: var(--dark-panel);
+        }
+
+        .chat-input {
+            display: flex;
+            position: relative;
+            border-radius: 8px;
+            background-color: rgba(13, 17, 23, 0.6);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .chat-input:focus-within {
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 10px 0 rgba(0, 153, 255, 0.2);
+        }
+
+        #user-input {
+            flex: 1;
+            background-color: transparent;
+            border: none;
+            color: var(--text-primary);
+            padding: 16px;
+            font-size: 15px;
+            resize: none;
+            min-height: 56px;
+            max-height: 150px;
+            overflow-y: auto;
+            font-family: 'Roboto', sans-serif;
+            outline: none;
+        }
+
+        #user-input:focus {
+            outline: none;
+        }
+
+        #user-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        #send-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 56px;
+        }
+
+        #send-button:hover {
+            background-color: var(--primary-glow);
+            box-shadow: 0 0 10px rgba(0, 153, 255, 0.4);
+        }
+        
+
+        #send-button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Typing indicator */
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            margin-top: 10px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .typing-dots {
+            display: flex;
+            margin-left: 10px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--accent-blue);
+            border-radius: 50%;
+            margin-right: 3px;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingAnimation {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        /* Tech elements */
+        .tech-line {
+            position: absolute;
+            height: 1px;
+            width: 100px;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+            opacity: 0.2;
+            z-index: -1;
+        }
+
+        .tech-line:nth-child(1) {
+            top: 15%;
+            left: -50px;
+            width: 150px;
+        }
+
+        .tech-line:nth-child(2) {
+            top: 45%;
+            right: -50px;
+            width: 120px;
+        }
+
+        .tech-line:nth-child(3) {
+            bottom: 25%;
+            left: 20%;
+            width: 200px;
+        }
+
+        /* Corner elements */
+        .corner-decoration {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border: 1px solid var(--border-color);
+            z-index: -1;
+        }
+
+        .corner-decoration:nth-child(1) {
+            top: 0;
+            left: 0;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .corner-decoration:nth-child(2) {
+            top: 0;
+            right: 0;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .corner-decoration:nth-child(3) {
+            bottom: 0;
+            left: 0;
+            border-right: none;
+            border-top: none;
+        }
+
+        .corner-decoration:nth-child(4) {
+            bottom: 0;
+            right: 0;
+            border-left: none;
+            border-top: none;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .message-content {
+                max-width: 90%;
+            }
+            
+            .status-bar {
+                font-size: 10px;
+            }
+            
+            .logo {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="tech-grid"></div>
+    <div class="tech-line"></div>
+    <div class="tech-line"></div>
+    <div class="tech-line"></div>
+    <div class="corner-decoration"></div>
+    <div class="corner-decoration"></div>
+    <div class="corner-decoration"></div>
+    <div class="corner-decoration"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">Aroma AI</div>
+            <div class="nav-links">
+                <a href="/admin/login">Admin Access</a>
+                <a href="https://github.com" target="_blank">GitHub</a>
+                <a href="#" id="clear-chat">Clear Chat</a>
+            </div>
+        </header>
+        
+        <div class="status-bar">
+            <div class="model-selector">
+                <label for="model-select">Model:</label>
+                <select id="model-select" class="tech-select">
+                    <option value="llama2">Llama2</option>
+                    <option value="mistral">Mistral</option>
+                    <option value="tinyllama">TinyLlama</option>
+                    <option value="solar">Solar</option>
+                </select>
+                <span class="status-label">Active</span>
+            </div>
+        </div>
+        
+        <div class="chat-container">
+            <div class="chat-messages" id="chat-messages"></div>
+            
+            <div class="typing-indicator">
+                <span>Aroma AI is thinking</span>
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+            
+            <div class="chat-input-container">
+                <div class="chat-input">
+                    <textarea id="user-input" placeholder="Ask about Aroma College..."></textarea>
+                    <button id="send-button">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let chatHistory = [];
+            // Configure marked.js for better table and list rendering
+            marked.use({
+                breaks: true,
+                gfm: true,
+                headerIds: false
+            });
+            // DOM Elements
+            const chatMessagesElement = document.getElementById('chat-messages');
+            const userInput = document.getElementById('user-input');
+            const sendButton = document.getElementById('send-button');
+            const clearChatButton = document.getElementById('clear-chat');
+            const currentModelElement = document.getElementById('current-model');
+            const typingIndicator = document.querySelector('.typing-indicator');
+            const statusIndicator = document.querySelector('.status-indicator');
+            
+            const modelSelect = document.getElementById('model-select');
+            
+            // Fetch current model on load
+            fetch('/api/get_current_model', {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.model) {
+                    // Select the current model in dropdown
+                    const modelName = data.model.toLowerCase();
+                    if (modelSelect.querySelector(`option[value="${modelName}"]`)) {
+                        modelSelect.value = modelName;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching model:', error);
+                statusIndicator.classList.add('offline');
+            });
+            
+            // Handle model selection change
+            modelSelect.addEventListener('change', function() {
+                const selectedModel = this.value;
+                const statusLabel = document.querySelector('.status-label');
+                
+                // Update the status label to show updating status
+                statusLabel.textContent = "Updating...";
+                statusLabel.style.backgroundColor = "var(--warning)";
+                
+                // Send request to update model
+                fetch('/api/update_model', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ model: selectedModel })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update status to active again
+                        statusLabel.textContent = "Active";
+                        statusLabel.style.backgroundColor = "";
+                        
+                        // Show a notification in chat
+                        addBotMessage(`Model switched to ${selectedModel}. How can I help you?`);
+                    } else {
+                        // Show error
+                        statusLabel.textContent = "Error";
+                        statusLabel.style.backgroundColor = "var(--danger)";
+                        addBotMessage(`Error switching model: ${data.error || 'Unknown error'}. Please try again.`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating model:', error);
+                    statusLabel.textContent = "Error";
+                    statusLabel.style.backgroundColor = "var(--danger)";
+                    addBotMessage(`Error communicating with server. Please try again.`);
+                });
+            });
+            
+            // Add welcome message
+            addBotMessage("Hello! I'm Aroma AI, an intelligent assistant for Aroma College. How can I help you today?");
+            
+            // Event Listeners
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault(); // Prevent default to avoid new line
+                    sendMessage(); // Send the message
+                }
+            });
+            
+            sendButton.addEventListener('click', sendMessage);
+            
+            clearChatButton.addEventListener('click', function() {
+                chatMessagesElement.innerHTML = '';
+                chatHistory = []; // Clear chat history
+                addBotMessage("Chat cleared. How can I help you today?");
+            });
+            
+            // Send a message to the chatbot
+            function sendMessage() {
+                const message = userInput.value.trim();
+                if (message === '') return;
+                
+                // Add user message to chat
+                addUserMessage(message);
+                
+                // Clear input
+                userInput.value = '';
+                
+                // Show typing indicator
+                typingIndicator.style.display = 'flex';
+                
+                // Send message to the regular API (non-streaming)
+                fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ question: message, chat_history: chatHistory.slice(-10) }) // Send last 10 messages as history
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Hide typing indicator
+                    typingIndicator.style.display = 'none';
+                    
+                    // Add bot message to chat with Markdown formatting
+                    if (data && data.answer) {
+                        addBotMessage(data.answer);
+                    } else if (data && data.error) {
+                        addBotMessage(`Error: ${data.error}`);
+                    } else {
+                        addBotMessage('Sorry, I encountered an unexpected error. Please try again.');
+                    }
+                    
+                    // Scroll to the new message
+                    scrollToBottom();
+                })
+                .catch(error => {
+                    // Hide typing indicator
+                    typingIndicator.style.display = 'none';
+                    
+                    // Add error message
+                    addBotMessage(`Error communicating with server: ${error.message}. Please try again.`);
+                    
+                    // Scroll to the new message
+                    scrollToBottom();
+                });
+            }
+            
+            // Function to add a user message to the chat
+            function addUserMessage(message) {
+                const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message user-message';
+                messageDiv.innerHTML = `
+                    <div class="message-content">
+                        ${message}
+                        <span class="message-time">${timestamp}</span>
+                    </div>
+                `;
+                
+                chatMessagesElement.appendChild(messageDiv);
+                chatHistory.push({ role: 'user', content: message });
+                scrollToBottom();
+            }
+            
+            // Function to add a bot message to the chat with Markdown formatting
+            function addBotMessage(message) {
+                const messageElement = document.createElement('div');
+                messageElement.className = 'message bot-message';
+                
+                const avatar = document.createElement('div');
+                avatar.className = 'message-avatar bot-avatar';
+                avatar.textContent = 'AI';
+                
+                const content = document.createElement('div');
+                content.className = 'message-content';
+                
+                // Parse markdown content
+                const markdownDiv = document.createElement('div');
+                markdownDiv.className = 'markdown-content';
+                markdownDiv.innerHTML = marked.parse(message);
+                content.appendChild(markdownDiv);
+                
+                const timeSpan = document.createElement('span');
+                timeSpan.className = 'message-time';
+                timeSpan.textContent = getCurrentTime();
+                content.appendChild(timeSpan);
+                
+                messageElement.appendChild(avatar);
+                messageElement.appendChild(content);
+                chatMessagesElement.appendChild(messageElement);
+                
+                // Apply syntax highlighting to code blocks
+                messageElement.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+                chatHistory.push({ role: 'assistant', content: message });
+                scrollToBottom();
+            }
+            
+            // Get current time formatted
+            function getCurrentTime() {
+                const now = new Date();
+                return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            }
+            
+            // Scroll to the bottom of the chat
+            function scrollToBottom() {
+                chatMessagesElement.scrollTop = chatMessagesElement.scrollHeight;
+            }
+        });
+    </script>
+</body>
+</html>

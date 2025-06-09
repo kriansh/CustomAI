@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Aroma AI</title>
+    <link rel="icon" type="image/png" href="https://www.aromaschool.edu.np/wp-content/uploads/2020/09/aroma_logo_final.png">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0066cc;
+            --primary-glow: #0099ff;
+            --secondary: #001a33;
+            --dark-bg: #0d1117;
+            --dark-panel: #161b22;
+            --accent: #58a6ff;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --border-color: #30363d;
+            --success: #2ea043;
+            --danger: #f85149;
+            --warning: #d29922;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        .container {
+            background-color: var(--dark-panel);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            max-width: 600px;
+            width: 90%;
+        }
+        .logo {
+            max-width: 200px;
+            height: auto; /* Maintain aspect ratio */
+            margin-bottom: 30px;
+        }
+        h1 {
+            color: var(--accent);
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+        p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: var(--text-secondary);
+        }
+        .chat-button {
+            display: inline-block;
+            background-color: var(--primary);
+            color: var(--text-primary);
+            padding: 15px 30px;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        .chat-button:hover, .chat-button:focus {
+            background-color: var(--primary-glow);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+        footer {
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://www.aromaschool.edu.np/wp-content/uploads/2020/09/aroma_logo_final.png" alt="Aroma AI Logo" class="logo">
+        <h1>Welcome to Aroma AI</h1>
+        <p>Your intelligent assistant for Aroma College. Get instant answers to your questions, explore resources, and more. Click below to start chatting!</p>
+        <a href="{{ url_for('chat_page') }}" class="chat-button">Start Chatting</a>
+    </div>
+    <footer>
+        <p>&copy; 2025 Aroma College. All rights reserved.</p>
+    </footer>
+</body>
+</html>

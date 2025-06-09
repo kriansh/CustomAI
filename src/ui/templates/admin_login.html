@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aroma AI - Admin Login</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0f1a2b;
+            color: #e0e0e0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: 
+                linear-gradient(rgba(15, 26, 43, 0.8), rgba(15, 26, 43, 0.8)),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect x="0" y="0" width="100" height="100" fill="%23152238"/><path d="M0 50 L100 50 M50 0 L50 100" stroke="%23213354" stroke-width="1"/></svg>');
+        }
+        
+        .login-container {
+            background-color: #1a2942;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            width: 400px;
+            max-width: 90%;
+            border: 1px solid #2d4063;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-header h1 {
+            color: #5e9eff;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .login-header p {
+            color: #8ba3c2;
+            margin: 0;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #a1b5d3;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid #2d4063;
+            background-color: #152238;
+            color: #e0e0e0;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #5e9eff;
+            box-shadow: 0 0 0 2px rgba(94, 158, 255, 0.2);
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background-color: #5e9eff;
+            color: #0f1a2b;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-login:hover {
+            background-color: #4b8bff;
+        }
+        
+        .error-message {
+            color: #ff5e5e;
+            background-color: rgba(255, 94, 94, 0.1);
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #8ba3c2;
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            color: #5e9eff;
+        }
+        
+        /* Futuristic elements */
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #5e9eff, #3a76e3, #5e9eff);
+            z-index: -1;
+            filter: blur(10px);
+            opacity: 0.7;
+            border-radius: 10px;
+        }
+        
+        .tech-line {
+            position: absolute;
+            height: 2px;
+            width: 100px;
+            background: linear-gradient(90deg, transparent, #5e9eff, transparent);
+            opacity: 0.5;
+        }
+        
+        .tech-line:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            width: 120px;
+        }
+        
+        .tech-line:nth-child(2) {
+            top: 40%;
+            right: 10%;
+            width: 80px;
+        }
+        
+        .tech-line:nth-child(3) {
+            bottom: 30%;
+            left: 15%;
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div class="tech-line"></div>
+    <div class="tech-line"></div>
+    <div class="tech-line"></div>
+    
+    <div class="login-container">
+        <div class="login-header">
+            <h1>AROMA AI</h1>
+            <p>Administrator Access Portal</p>
+        </div>
+        
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
+        
+        <form method="post">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn-login">LOGIN</button>
+        </form>
+        
+        <a href="/" class="back-link">Return to main interface</a>
+    </div>
+</body>
+</html>
